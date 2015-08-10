@@ -34,7 +34,7 @@ Meteor.beforeAllMethods = function(fn) {
   allMethodHooks.before.unshift(fn);
 };
 
-Meteor.afterAllMethods = function(methodName, fn) {
+Meteor.afterAllMethods = function(fn) {
   allMethodHooks.after.unshift(fn);
 };
 
@@ -82,6 +82,8 @@ wrap = function(methodName) {
   };
 };
 
+
+//XXX: on the client-side this might increase page load time when there are lots of methods
 Meteor.startup(function() {
   var methodHandlers;
   if(Meteor.isServer){
