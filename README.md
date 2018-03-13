@@ -35,11 +35,8 @@ Uses include:
 
 The before methods get the same arguments as the original method, 
 
-The after methods get the arguments + the result of the original method. 
-If it returns a value that is not null or undefined, then this will replace the original result.
-
-## Remarks
-If you have a lot of methods on the client-side, initial page load time can be increased, since each method needs to be wrapped in another method on page load.
+The after method can get the current result from `this._result`.
+If it returns a value that is not undefined, then this will replace the original result.
 
 ## TODO
 * Testing

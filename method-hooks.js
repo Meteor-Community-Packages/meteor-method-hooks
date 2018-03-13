@@ -1,98 +1,93 @@
-var methodHooks, allMethodHooks, registerMethodHook, wrap;
+import { Meteor } from 'meteor/meteor';
 
-methodHooks = {};
-allMethodHooks = {before:[],after:[]};
+const hasOwn = Object.prototype.hasOwnProperty;
 
-registerMethodHook = function(methodNames, position, fn) {
-  var i, len, methodName, results;
-  if (!(methodNames instanceof Array)) {
+const methodHooks = Object.create(null);
+const allMethodHooks = { before: [], after: [] };
+
+const registerMethodHook = function(methodNames, position, fn) {
+  if (!Array.isArray(methodNames)) {
     methodNames = [methodNames];
   }
-  results = [];
-  for (i = 0, len = methodNames.length; i < len; i++) {
-    methodName = methodNames[i];
-    if (methodHooks[methodName] == null) {
+
+  const results = [];
+
+  for (const methodName of methodNames) {
+    if (!methodHooks[methodName]) {
       methodHooks[methodName] = {
         before: [],
-        after: []
+        after: [],
       };
     }
     results.push(methodHooks[methodName][position].unshift(fn));
   }
+
   return results;
 };
 
-Meteor.beforeMethods = function(methodName, fn) {
-  return registerMethodHook(methodName, 'before', fn);
-};
-
-Meteor.afterMethods = function(methodName, fn) {
-  return registerMethodHook(methodName, 'after', fn);
-};
-
-Meteor.beforeAllMethods = function(fn) {
-  allMethodHooks.before.unshift(fn);
-};
-
-Meteor.afterAllMethods = function(fn) {
-  allMethodHooks.after.unshift(fn);
-};
-
-wrap = function(methodName) {
-  if(Meteor.isServer){
-    var fn = Meteor.server.method_handlers[methodName];
-  }else{
-    var fn = Meteor.connection._methodHandlers[methodName];
+const wrap = function(methodName) {
+  let fn;
+  if (Meteor.isServer) {
+    fn = Meteor.server.method_handlers[methodName];
+  } else {
+    fn = Meteor.connection._methodHandlers[methodName];
   }
 
-
-  return function() {var result, args, beforeFns, afterFns, i, len;
-
-    args = Array.prototype.slice.call(arguments);
+  return function(...args) {
     this._methodName = methodName;
 
-    beforeFns = allMethodHooks.before;
-    if(methodHooks.hasOwnProperty(methodName)){
-      beforeFns = beforeFns.concat(methodHooks[methodName].before);
+    let beforeFns = allMethodHooks.before;
+    if (hasOwn.call(methodHooks, methodName)) {
+      beforeFns = [
+        ...beforeFns,
+        ...methodHooks[methodName].before,
+      ];
     }
 
-    for(i = 0, len = beforeFns.length; i < len; i++){
-      if(beforeFns[i].apply(this, args) === false){
+    for (const beforeFn of beforeFns) {
+      if (beforeFn.apply(this, args) === false) {
         return false;
       }
     }
 
-    result = fn.apply(this, args);
+    this._result = fn.apply(this, args);
 
-    afterFns = allMethodHooks.after;
-    if(methodHooks.hasOwnProperty(methodName)){
-      afterFns = afterFns.concat(methodHooks[methodName].after);
+    let afterFns = allMethodHooks.after;
+    if (hasOwn.call(methodHooks, methodName)) {
+      afterFns = [
+        ...afterFns,
+        ...methodHooks[methodName].after,
+      ];
     }
 
-    args.push(result);
-    for(i = 0, len = afterFns.length; i < len; i++){
-      result = afterFns[i].apply(this, args);
-      if(!_.isNull(result) && !_.isUndefined(result)){
-        args[args.length-1] = result;
+    for (const afterFn of afterFns) {
+      const result = afterFn.apply(this, args);
+      if (result !== undefined) {
+        this._result = result;
       }
     }
 
-    return result;
-
+    return this._result;
   };
 };
 
+Meteor.beforeMethods = (methodName, fn) => registerMethodHook(methodName, 'before', fn);
 
-//XXX: on the client-side this might increase page load time when there are lots of methods
+Meteor.afterMethods = (methodName, fn) => registerMethodHook(methodName, 'after', fn);
+
+Meteor.beforeAllMethods = fn => allMethodHooks.before.unshift(fn);
+
+Meteor.afterAllMethods = fn => allMethodHooks.after.unshift(fn);
+
 Meteor.startup(function() {
-  var methodHandlers;
-  if(Meteor.isServer){
+  let methodHandlers;
+  if (Meteor.isServer) {
     methodHandlers = Meteor.server.method_handlers;
-  }else{
+  } else {
     methodHandlers = Meteor.connection._methodHandlers;
   }
-  for(var method in methodHandlers){
-    if(!methodHandlers.hasOwnProperty(method))continue;
+
+  Object.keys(methodHandlers).forEach((method) => {
     methodHandlers[method] = wrap(method);
-  }
+  });
 });

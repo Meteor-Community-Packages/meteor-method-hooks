@@ -3,20 +3,15 @@
  */
 
 Package.describe({
+  name: 'seba:method-hooks',
   summary: 'Provides before/after hooks for Meteor methods',
-  version: '1.0.0',
-  name: 'sebakerckhof:method-hooks',
+  version: '2.0.0',
   git: 'https://github.com/sebakerckhof/meteor-method-hooks'
 });
 
 Package.on_use(function (api) {
-  if(api.versionsFrom) {
-    api.versionsFrom('METEOR@0.9.0');
-  }
-
-  api.add_files([
-    'method-hooks.js'
-  ], ['client','server']);
-
-
+  api.versionsFrom('METEOR@1.6.1');
+  api.use('meteor');
+  api.use('ecmascript');
+  api.mainModule('method-hooks.js');
 });
