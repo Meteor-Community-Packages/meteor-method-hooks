@@ -3,8 +3,8 @@
 ### Before/after hooks for Meteor methods
 
 This package extends Meteor with four methods:
-* `Meteor.beforeMethods` 
-* `Meteor.afterMethods`
+* `Meteor.beforeMethod` 
+* `Meteor.afterMethod`
 * `Meteor.beforeAllMethods` 
 * `Meteor.afterAllMethods`
 
