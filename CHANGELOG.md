@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.1 (05-02-2019)
+
+Fix for when the method throws
+
 ## v3.0.0 (29-01-2019)
 
 Modify the client side so we can also hook into method calls that exist only on the server
@@ -7,6 +11,8 @@ Modify the client side so we can also hook into method calls that exist only on 
 **Breaking change** `beforeMethods` and `afterMethods` have been renamed to `beforeMethod` and `afterMethod`
 
 **Breaking change** The hooks on the client side are now triggered before and after the server call. Not before and after the simulated client-side call.
+
+**Breaking change** Even when the method throws, the after hooks are still called. `this._error` will contain the error object that was thrown.
 
 ## v2.0.0 (12-03-2018)
 

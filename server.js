@@ -8,6 +8,11 @@ const wrap = function(methodName) {
     this._methodName = methodName;
 
     const beforeFns = getHooksBefore(methodName);
+    const afterFns = getHooksAfter(methodName);
+
+    if (!beforeFns.length && !afterFns.length) {
+      return fn.apply(this, args);
+    }
 
     for (const beforeFn of beforeFns) {
       if (beforeFn.apply(this, args) === false) {
@@ -16,17 +21,20 @@ const wrap = function(methodName) {
     }
 
     try {
-      this._result = fn.apply(this, args);
+      this._result = Promise.await(fn.apply(this, args));
     } catch (error) {
       this._error = error;
     }
 
-    const afterFns = getHooksAfter(methodName);
     for (const afterFn of afterFns) {
       const result = afterFn.apply(this, args);
       if (result !== undefined) {
         this._result = result;
       }
+    }
+
+    if (this._error) {
+      throw this._error;
     }
 
     return this._result;
