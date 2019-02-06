@@ -1,41 +1,36 @@
-import { Meteor } from 'meteor/meteor';
 import { getHooksAfter, getHooksBefore } from './common';
+import MethodInvoker from 'meteor/ddp-client/common/MethodInvoker.js'
 
-const originalApply = Meteor.connection.apply.bind(Meteor.connection);
+const originalSend = MethodInvoker.prototype.sendMessage
+const originalReceive = MethodInvoker.prototype.receiveResult;
 
-Meteor.connection.apply = function apply(name, args, options, callback) {
-  const beforeFns = getHooksBefore(name);
-  for (const beforeFn of beforeFns) {
-    if (beforeFn.apply(this, args) === false) {
-      return false;
-    }
-  }
-
-  const afterFns = getHooksAfter(name);
-  if (afterFns.length) {
-    // We were passed 3 arguments. They may be either (name, args, options)
-    // or (name, args, callback)
-    if (!callback && typeof options === 'function') {
-      callback = options;
-      options = {};
-    }
-    options = options || {};
-
-    const originalCallback = callback;
-    callback = (error, result) => {
-      this._error = error;
-      this._result = result;
-
-      for (const afterFn of afterFns) {
-        const newResult = afterFn.apply(this, args);
-        if (newResult !== undefined) {
-          this._result = newResult;
-        }
+MethodInvoker.prototype.sendMessage = function sendMessage() {
+  if (this._message.msg === 'method') {
+    const beforeFns = getHooksBefore(this._message.method);
+    for (const beforeFn of beforeFns) {
+      if (beforeFn.apply(this, this._message.params) === false) {
+        return false;
       }
+    }
+  }
+ 
+  originalSend.call(this);
+}
 
-      originalCallback(error, this._result);
-    };
+MethodInvoker.prototype.receiveResult = function receiveResult(error, result) {
+  const context = {
+    error,
+    result
   }
 
-  originalApply.call(this, name, args, options, callback);
-};
+  if (!this.gotResult()) {
+    const afterFns = getHooksAfter(this._message.method);
+    for (const afterFn of afterFns) {
+      try { afterFn.apply(context, this._message.params) } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  originalReceive.call(this, context.error, context.result);
+}

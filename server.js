@@ -21,23 +21,20 @@ const wrap = function(methodName) {
     }
 
     try {
-      this._result = Promise.await(fn.apply(this, args));
+      this.result = Promise.await(fn.apply(this, args));
     } catch (error) {
-      this._error = error;
+      this.error = error;
     }
 
     for (const afterFn of afterFns) {
-      const result = afterFn.apply(this, args);
-      if (result !== undefined) {
-        this._result = result;
-      }
+      try { afterFn.apply(this, args); } catch (error) {}
     }
 
-    if (this._error) {
-      throw this._error;
+    if (this.error) {
+      throw this.error;
     }
 
-    return this._result;
+    return this.result;
   };
 };
 

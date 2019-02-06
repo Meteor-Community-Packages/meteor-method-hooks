@@ -35,7 +35,7 @@ Uses include:
 
 The before methods get the same arguments as the original method, 
 
-The after method can get the current result from `this._result`.
+The after method can get the current result from `this.result` or the error from `this.error`
 If it returns a value that is not undefined, then this will replace the original result.
 
 ## TODO
