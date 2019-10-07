@@ -1,0 +1,28 @@
+{
+  "name": "meteor-method-hooks",
+  "version": "3.0.2",
+  "description": "Provides before/after hooks for Meteor methods",
+  "author": {
+    "name": "Seba Kerckhof",
+    "url": "https://github.com/sebakerckhof"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Meteor-Community-Packages/meteor-method-hooks/meteor-method-hooks.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Meteor-Community-Packages/meteor-method-hooks/issues"
+  },
+  "homepage": "https://github.com/Meteor-Community-Packages/meteor-collection-hooks",
+  "private": true,
+  "scripts": {
+    "tools:lint": "./node_modules/eslint/bin/eslint.js *.js",
+    "tools:lintfix": "./node_modules/eslint/bin/eslint.js *.js --fix",
+    "publish": "meteor publish"
+  },
+  "devDependencies": {
+    "babel-eslint": "10.0.3",
+    "eslint": "^6.5.1"
+  }
+}
