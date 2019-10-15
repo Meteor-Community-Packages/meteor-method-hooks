@@ -1,7 +1,7 @@
 import { getHooksAfter, getHooksBefore } from './common';
-import MethodInvoker from 'meteor/ddp-client/common/MethodInvoker.js'
+import MethodInvoker from 'meteor/ddp-client/common/MethodInvoker.js';
 
-const originalSend = MethodInvoker.prototype.sendMessage
+const originalSend = MethodInvoker.prototype.sendMessage;
 const originalReceive = MethodInvoker.prototype.receiveResult;
 
 MethodInvoker.prototype.sendMessage = function sendMessage() {
@@ -13,24 +13,24 @@ MethodInvoker.prototype.sendMessage = function sendMessage() {
       }
     }
   }
- 
-  originalSend.call(this);
-}
+
+  return originalSend.call(this);
+};
 
 MethodInvoker.prototype.receiveResult = function receiveResult(error, result) {
   const context = {
     error,
-    result
-  }
+    result,
+  };
 
   if (!this.gotResult()) {
     const afterFns = getHooksAfter(this._message.method);
     for (const afterFn of afterFns) {
-      try { afterFn.apply(context, this._message.params) } catch (error) {
-        console.log(error);
+      try { afterFn.apply(context, this._message.params); } catch (err) {
+        console.log(err);
       }
     }
   }
 
   originalReceive.call(this, context.error, context.result);
-}
+};

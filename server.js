@@ -1,10 +1,10 @@
 import { Meteor } from 'meteor/meteor';
 import { getHooksAfter, getHooksBefore } from './common';
 
-const wrap = function(methodName) {
+function wrap(methodName) {
   const fn = Meteor.server.method_handlers[methodName];
 
-  return function(...args) {
+  return function wrappedMethodHandler(...args) {
     this._methodName = methodName;
 
     const beforeFns = getHooksBefore(methodName);
@@ -27,7 +27,7 @@ const wrap = function(methodName) {
     }
 
     for (const afterFn of afterFns) {
-      try { afterFn.apply(this, args); } catch (error) {}
+      try { afterFn.apply(this, args); } catch (error) { /* */ }
     }
 
     if (this.error) {
@@ -36,9 +36,9 @@ const wrap = function(methodName) {
 
     return this.result;
   };
-};
+}
 
-Meteor.startup(function() {
+Meteor.startup(() => {
   const methodHandlers = Meteor.server.method_handlers;
   Object.keys(methodHandlers).forEach((method) => {
     methodHandlers[method] = wrap(method);

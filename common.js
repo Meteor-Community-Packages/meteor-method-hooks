@@ -5,8 +5,9 @@ const hasOwn = Object.prototype.hasOwnProperty;
 const methodHooks = Object.create(null);
 const allMethodHooks = { before: [], after: [] };
 
-const registerMethodHook = function(methodNames, position, fn) {
+function registerMethodHook(methodNames, position, fn) {
   if (!Array.isArray(methodNames)) {
+    // eslint-disable-next-line
     methodNames = [methodNames];
   }
 
@@ -23,11 +24,13 @@ const registerMethodHook = function(methodNames, position, fn) {
   }
 
   return results;
-};
+}
 
-Meteor.beforeMethod = (methodName, fn) => registerMethodHook(methodName, 'before', fn);
+Meteor.beforeMethod = (methodName, fn) => registerMethodHook(methodName,
+  'before', fn);
 
-Meteor.afterMethod = (methodName, fn) => registerMethodHook(methodName, 'after', fn);
+Meteor.afterMethod = (methodName, fn) => registerMethodHook(methodName,
+  'after', fn);
 
 Meteor.beforeAllMethods = fn => allMethodHooks.before.unshift(fn);
 
