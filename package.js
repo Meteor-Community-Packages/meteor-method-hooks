@@ -5,11 +5,11 @@
 Package.describe({
   name: 'seba:method-hooks',
   summary: 'Provides before/after hooks for Meteor methods',
-  version: '3.0.2',
+  version: '3.0.3',
   git: 'https://github.com/Meteor-Community-Packages/meteor-method-hooks',
 });
 
-Package.on_use(function definePackage(api) {
+Package.onUse(function definePackage(api) {
   api.versionsFrom('METEOR@1.8');
   api.use('meteor');
   api.use('ecmascript');
