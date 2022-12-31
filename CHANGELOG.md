@@ -1,5 +1,13 @@
 # Changelog
 
+## v3.0.4 UNRELEASED
+
+Minimum Meteor version is v1.12.1
+
+## v3.0.3 (31-12-2022)
+
+Updated package api, so that it can be used in the latest Meteor.
+
 ## v3.0.2 (06-02-2019)
 
 New strategy for client side
