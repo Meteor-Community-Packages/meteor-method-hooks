@@ -4,7 +4,7 @@ import { getHooksAfter, getHooksBefore } from './common';
 function wrap(methodName) {
   const fn = Meteor.server.method_handlers[methodName];
 
-  return function wrappedMethodHandler(...args) {
+  return async function wrappedMethodHandler(...args) {
     this._methodName = methodName;
 
     const beforeFns = getHooksBefore(methodName);
@@ -21,7 +21,7 @@ function wrap(methodName) {
     }
 
     try {
-      this.result = Promise.await(fn.apply(this, args));
+      this.result = await fn.apply(this, args);
     } catch (error) {
       this.error = error;
     }
