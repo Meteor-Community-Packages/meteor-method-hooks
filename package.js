@@ -10,8 +10,7 @@ Package.describe({
 });
 
 Package.onUse(function definePackage(api) {
-  api.versionsFrom(['1.12.1', '2.8', '3.0']);
-  api.use('meteor');
+  api.versionsFrom(['1.12.1', '2.3', '3.0.1']);
   api.use('ecmascript');
   api.mainModule('server.js', 'server');
   api.mainModule('client.js', 'client');
