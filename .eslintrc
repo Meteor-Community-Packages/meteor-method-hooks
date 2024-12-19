@@ -1,6 +1,6 @@
 {
   // Based on Meteor eslint rules https://github.com/meteor/meteor/blob/3051150f2f5ae953f391802e73682fba613b3d46/scripts/admin/eslint/.eslintrc
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "node": true
@@ -34,7 +34,7 @@
      */
     "comma-dangle": [1, "always-multiline"],    // http://eslint.org/docs/rules/comma-dangle
     "no-cond-assign": [2, "always"], // http://eslint.org/docs/rules/no-cond-assign
-    "no-console": 1,                 // http://eslint.org/docs/rules/no-console
+    "no-console": ["error", { "allow": ["error"] }],                 // http://eslint.org/docs/rules/no-console
     "no-debugger": 1,                // http://eslint.org/docs/rules/no-debugger
     "no-alert": 1,                   // http://eslint.org/docs/rules/no-alert
     "no-constant-condition": 1,      // http://eslint.org/docs/rules/no-constant-condition

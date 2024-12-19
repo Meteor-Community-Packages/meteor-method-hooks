@@ -1,6 +1,6 @@
 {
   "name": "meteor-method-hooks",
-  "version": "3.0.2",
+  "version": "4.0.0",
   "description": "Provides before/after hooks for Meteor methods",
   "author": {
     "name": "Seba Kerckhof",
@@ -22,7 +22,9 @@
     "publish": "meteor publish"
   },
   "devDependencies": {
-    "babel-eslint": "10.0.3",
-    "eslint": "^6.5.1"
-  }
+    "@babel/core": "^7.26.0",
+    "@babel/eslint-parser": "^7.25.9",
+    "eslint": "^8.5.0"
+  },
+  "babel": {}
 }
