@@ -1,6 +1,6 @@
 # Meteor Method Hooks
 
-### Before/after hooks for Meteor methods
+## Before/after hooks for Meteor methods
 
 This package extends Meteor with four methods:
 * `Meteor.beforeMethod` 
@@ -43,3 +43,5 @@ If it returns a value that is not undefined, then this will replace the original
 
 ## Credits
 Inspired by: [Chris Hitchcott](https://github.com/hitchcott/meteor-method-hooks), 2015
+Maintained until 2022 by [Seba Kerckhof](https://github.com/sebakerckhof)
+Maintained since 2022 by Meteor Community Packages

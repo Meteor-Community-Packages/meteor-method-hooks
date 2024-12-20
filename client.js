@@ -27,7 +27,7 @@ MethodInvoker.prototype.receiveResult = function receiveResult(error, result) {
     const afterFns = getHooksAfter(this._message.method);
     for (const afterFn of afterFns) {
       try { afterFn.apply(context, this._message.params); } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     }
   }
