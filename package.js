@@ -5,7 +5,7 @@
 Package.describe({
   name: 'seba:method-hooks',
   summary: 'Provides before/after hooks for Meteor methods',
-  version: '4.0.0-rc.0',
+  version: '4.0.0-rc.1',
   git: 'https://github.com/Meteor-Community-Packages/meteor-method-hooks',
 });
 

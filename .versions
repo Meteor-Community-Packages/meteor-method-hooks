@@ -14,4 +14,4 @@ modules@0.20.3
 modules-runtime@0.13.2
 promise@1.0.0
 react-fast-refresh@0.2.9
-seba:method-hooks@4.0.0-rc.0
+seba:method-hooks@4.0.0-rc.1
